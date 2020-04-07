@@ -24,3 +24,4 @@ variable "master-server-count" {}
 variable "k8s-master_ssh_key" {}
 variable "node-server-count" {}
 variable "k8s-node_ssh_key" {}
+variable "terraform_token" {}
