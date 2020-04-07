@@ -1,0 +1,57 @@
+image: 
+ name: hashicorp/terraform:latest
+ entrypoint: 
+  - '/usr/bin/env'
+  - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+variables:
+ SSH_KEY: $SSH_PRIVATE_KEY
+ SUBSCRIPTION_ID: $ARM_SUBSCRIPTION_ID
+ CLIENT_ID: $ARM_CLIENT_ID
+ CLIENT_SECRET: $ARM_CLIENT_SECRET
+ TENANT_ID: $ARM_TENANT_ID
+
+before_script:
+ - terraform --version
+ - cd infra && terraform init
+ - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+ - echo "$SSH_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+ - export ssh_key=$SSH_KEY
+ - export ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID
+ - export ARM_CLIENT_ID=$ARM_CLIENT_ID
+ - export ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET
+ - export ARM_TENANT_ID=$ARM_TENANT_ID
+stages:
+  - plan 
+  - deploy 
+  - destroy
+
+plan:
+ stage: plan
+ script:
+  - terraform plan -var-file=./vars/dev.tf --out='publisher'
+  - ls -la 
+  - pwd 
+ artifacts:
+  paths:
+    - /builds/amirhendrick/kubernetes-on-azure/infra
+ only:
+    - develop
+    
+deploy:
+  stage: deploy
+  script:
+   - echo "Deploy to Azure"
+   - terraform apply -var-file=./vars/dev.tf -auto-approve
+  only:
+    - develop
+
+destroy:
+  stage: destroy
+  script:
+    - echo "Destroy Infrastructure"
+    - terraform plan -destroy -var-file=./vars/dev.tf -out=destroy.tfplan
+    - terraform apply destroy.tfplan
+  only:
+    - develop
+  when: manual
