@@ -6,6 +6,6 @@ terraform {
     workspaces {
       name = "kubernetes-on-azure-dev"
     }
-    token = "Uzk2KZnJ2kb5mQ.atlasv1.Qupvx1DPtJppcFF4iz2c1Yt79smU3z3yKjL6SxBYgJszjmZbzvghy7ZbQz59QmHsSDA"
+    token = "XXXXXXXXXXX"
   }
 }
