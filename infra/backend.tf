@@ -6,6 +6,6 @@ terraform {
     workspaces {
       name = "kubernetes-on-azure-dev"
     }
-    token = "XXXXXXXXXXX"
+    token = var.terraform_token
   }
 }
