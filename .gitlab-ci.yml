@@ -13,8 +13,6 @@ variables:
  TERRAFORM_TOKEN: $TERRAFORM_TOKEN
 
 before_script:
- - terraform --version
- - cd infra && terraform init
  - mkdir -p ~/.ssh && chmod 700 ~/.ssh
  - echo "$SSH_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
  - export ssh_key=$SSH_KEY
@@ -22,7 +20,13 @@ before_script:
  - export ARM_CLIENT_ID=$ARM_CLIENT_ID
  - export ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET
  - export ARM_TENANT_ID=$ARM_TENANT_ID
- - export terraform_token=$TERRAFORM_TOKEN
+ - export TERRAFORM_TOKEN=$TERRAFORM_TOKEN
+ - echo 'credentials "app.terraform.io" { 
+   token = "'$TERRAFORM_TOKEN'" 
+   }' > ~/.terraformrc
+ - terraform --version
+ - cd infra 
+ - terraform init
  
 stages:
   - plan 
