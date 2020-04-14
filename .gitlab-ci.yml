@@ -41,7 +41,7 @@ plan:
   - pwd 
  artifacts:
   paths:
-    - /builds/amirhendrick/kubernetes-on-azure/infra
+    - /builds/k8s-cluster-on-azure/infra
  only:
     - develop
     
